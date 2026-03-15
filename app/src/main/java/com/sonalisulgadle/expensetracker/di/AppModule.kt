@@ -2,9 +2,11 @@ package com.sonalisulgadle.expensetracker.di
 
 import android.content.Context
 import androidx.room.Room
+import com.sonalisulgadle.expensetracker.ai.GeminiService
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDao
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDatabase
 import com.sonalisulgadle.expensetracker.data.repository.ExpenseRepositoryImpl
+import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
 import dagger.Binds
 import dagger.Module
@@ -36,10 +38,15 @@ object AppModule {
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    // Tells Hilt: when someone asks for ExpenseRepository, give them ExpenseRepositoryImpl
     @Binds
     @Singleton
     abstract fun bindExpenseRepository(
         impl: ExpenseRepositoryImpl
     ): ExpenseRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoryRepository(
+        impl: GeminiService
+    ): CategoryRepository
 }

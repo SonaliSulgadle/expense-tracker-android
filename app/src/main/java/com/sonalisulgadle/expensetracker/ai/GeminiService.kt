@@ -2,15 +2,16 @@ package com.sonalisulgadle.expensetracker.ai
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.sonalisulgadle.expensetracker.BuildConfig
+import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GeminiService @Inject constructor() {
+class GeminiService @Inject constructor() : CategoryRepository {
 
     private val json = Json {
-        ignoreUnknownKeys = true  // safe parsing — ignores any extra fields Gemini adds
+        ignoreUnknownKeys = true  // safe parsing — to ignores any extra fields Gemini adds
         isLenient = true          // tolerates minor JSON formatting issues
     }
 
@@ -19,21 +20,19 @@ class GeminiService @Inject constructor() {
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 
-    suspend fun categorize(description: String): CategoryResult {
+    override suspend fun categorize(description: String): CategoryResult {
         return try {
             val prompt = CategoryPromptBuilder.build(description)
             val response = model.generateContent(prompt)
             val rawText = response.text ?: return fallback()
             parseResponse(rawText)
         } catch (e: Exception) {
-            // Never crash the app if AI fails — just return a fallback
             fallback()
         }
     }
 
     private fun parseResponse(raw: String): CategoryResult {
         return try {
-            // Strip any accidental markdown fences Gemini might add
             val cleaned = raw
                 .trim()
                 .removePrefix("```json")
