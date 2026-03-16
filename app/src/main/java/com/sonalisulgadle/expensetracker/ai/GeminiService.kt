@@ -3,6 +3,7 @@ package com.sonalisulgadle.expensetracker.ai
 import com.google.ai.client.generativeai.GenerativeModel
 import com.sonalisulgadle.expensetracker.BuildConfig
 import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
+import com.sonalisulgadle.expensetracker.util.Constants
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +17,7 @@ class GeminiService @Inject constructor() : CategoryRepository {
     }
 
     private val model = GenerativeModel(
-        modelName = "gemini-1.5-flash",  // fast + cheap, perfect for classification
+        modelName = Constants.GEMINI_MODEL,
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 

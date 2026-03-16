@@ -1,6 +1,7 @@
 package com.sonalisulgadle.expensetracker.domain.usecase
 
 import com.sonalisulgadle.expensetracker.domain.model.Expense
+import com.sonalisulgadle.expensetracker.domain.model.ExpenseError
 import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
 import javax.inject.Inject
@@ -15,10 +16,10 @@ class AddExpenseUseCase @Inject constructor(
     ): Result<Expense> {
         return try {
             if (description.isBlank()) {
-                return Result.failure(IllegalArgumentException("Description cannot be empty"))
+                return Result.failure(ExpenseError.EmptyDescription())
             }
             if (amount <= 0) {
-                return Result.failure(IllegalArgumentException("Amount must be greater than zero"))
+                return Result.failure(ExpenseError.InvalidAmount())
             }
 
             val categoryResult = categoryRepository.categorize(description)
@@ -36,7 +37,7 @@ class AddExpenseUseCase @Inject constructor(
 
             Result.success(expense)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(ExpenseError.DatabaseError())
         }
     }
 }

@@ -8,6 +8,7 @@ import com.sonalisulgadle.expensetracker.data.local.ExpenseDatabase
 import com.sonalisulgadle.expensetracker.data.repository.ExpenseRepositoryImpl
 import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
+import com.sonalisulgadle.expensetracker.util.Constants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,7 +27,7 @@ object AppModule {
         Room.databaseBuilder(
             context,
             ExpenseDatabase::class.java,
-            "expense_db"
+            Constants.DATABASE_NAME
         ).build()
 
     @Provides
