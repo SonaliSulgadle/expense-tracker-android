@@ -8,5 +8,6 @@ data class ExpenseListUiState(
     val categoryTotals: List<CategoryTotal> = emptyList(),
     val totalSpent: Double = 0.0,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val currentMonth: String? = ""
 )

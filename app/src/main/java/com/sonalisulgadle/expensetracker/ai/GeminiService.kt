@@ -25,30 +25,35 @@ class GeminiService @Inject constructor() : CategoryRepository {
         return try {
             val prompt = CategoryPromptBuilder.build(description)
             val response = model.generateContent(prompt)
-            val rawText = response.text ?: return fallback()
-            parseResponse(rawText)
+            val rawText = response.text ?: return fallback(description)
+            val geminiResponse = parseResponse(rawText)
+
+            CategoryResult(
+                category = geminiResponse.category,
+                emoji = EmojiResolver.resolve(description),  // local resolution
+                confidence = geminiResponse.confidence
+            )
         } catch (e: Exception) {
-            fallback()
+            fallback(description)
         }
     }
 
-    private fun parseResponse(raw: String): CategoryResult {
+    private fun parseResponse(raw: String): GeminiCategoryResponse {
         return try {
-            val cleaned = raw
-                .trim()
+            val cleaned = raw.trim()
                 .removePrefix("```json")
                 .removePrefix("```")
                 .removeSuffix("```")
                 .trim()
-            json.decodeFromString<CategoryResult>(cleaned)
+            json.decodeFromString<GeminiCategoryResponse>(cleaned)
         } catch (e: Exception) {
-            fallback()
+            GeminiCategoryResponse(category = "Other", confidence = 0.0)
         }
     }
 
-    private fun fallback() = CategoryResult(
+    private fun fallback(description: String = "") = CategoryResult(
         category = "Other",
-        emoji = "💸",
+        emoji = EmojiResolver.resolve(description),
         confidence = 0.0
     )
 }

@@ -10,6 +10,7 @@ import com.sonalisulgadle.expensetracker.domain.usecase.DeleteExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetCategoryTotalsUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetExpensesUseCase
 import com.sonalisulgadle.expensetracker.util.Constants
+import com.sonalisulgadle.expensetracker.util.formatCurrentMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,7 +43,8 @@ class ExpenseViewModel @Inject constructor(
                 expenses = expenses,
                 categoryTotals = categoryTotals,
                 totalSpent = expenses.sumOf { it.amount },
-                isLoading = false
+                isLoading = false,
+                currentMonth = formatCurrentMonth()
             )
         }.stateIn(
             scope = viewModelScope,
