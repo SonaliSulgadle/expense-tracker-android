@@ -1,10 +1,40 @@
 <resources>
     <string name="app_name">ExpenseTracker</string>
 
+    <!-- Dashboard -->
+    <string name="greeting">Good morning</string>
+    <string name="total_spent">Total spent</string>
+    <string name="this_month">This month</string>
+    <string name="total_expenses">Expenses</string>
+    <string name="avg_per_day">Avg / day</string>
+    <string name="categories">Categories</string>
+    <string name="recent_expenses">Recent expenses</string>
+    <string name="see_all">See all</string>
+    <string name="all">All</string>
+    <string name="add_expense">Add expense</string>
+    <string name="no_expenses_yet">No expenses yet</string>
+    <string name="add_first_expense">Tap the button below to add your first expense</string>
+
+    <string name="add_expense_subtitle">AI will categorize it automatically</string>
+    <string name="description_hint">What did you spend on?</string>
+    <string name="description_placeholder">e.g. Starbucks latte, Uber ride…</string>
+    <string name="amount_hint">Amount</string>
+    <string name="ai_categorizing">Gemini is categorizing…</string>
+    <string name="ai_categorizing_sub">This takes just a second</string>
+
+    <!-- Errors -->
     <string name="error_empty_description">Description cannot be empty</string>
     <string name="error_invalid_amount">Amount must be greater than zero</string>
-    <string name="error_ai_failed">AI categorization failed, using default</string>
-    <string name="error_database">Failed to save expense</string>
+    <string name="error_ai_failed">AI categorization failed, using default category</string>
+    <string name="error_database">Failed to save expense. Please try again</string>
     <string name="error_unknown">Something went wrong. Please try again</string>
 
+    <string name="temp_avatar_initials">SS</string>
+    <string name="temp_current_month">March 2025</string>
+    <string name="empty_icon_text">💸</string>
+    <string name="label_ai_badge">AI\n</string>
+    <string name="symbol_add">+</string>
+    <string name="symbol_currency_won">₩</string>
+    <string name="label_default_amount">0</string>
+    <string name="label_ai_state_indicator">ai_state</string>
 </resources>

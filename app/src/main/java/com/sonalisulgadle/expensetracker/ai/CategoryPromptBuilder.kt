@@ -16,20 +16,20 @@ object CategoryPromptBuilder {
 
     fun build(description: String): String = """
         You are an expense categorizer for a personal finance app.
-        
+
         Given an expense description, return ONLY a valid JSON object.
-        
+
         Available categories: ${CATEGORIES.joinToString(", ")}
-        
+
         Rules:
         - Pick the single most relevant category from the list above
-        - Choose an emoji that represents the expense (not the category)
         - Confidence is a number between 0.0 and 1.0
-        - Return ONLY the JSON object, no markdown, no explanation, no backticks
-        
+        - Return ONLY the JSON object
+        - No markdown, no explanation, no backticks, no extra text
+
         Expense description: "$description"
-        
-        Response format:
-        {"category": "Food & Drink", "emoji": "🍕", "confidence": 0.95}
-    """.trimIndent()
+
+        Respond with exactly this format:
+        {"category": "Food & Drink", "confidence": 0.95}
+""".trimIndent()
 }
