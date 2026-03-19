@@ -29,7 +29,7 @@ import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingExtraLarge
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingExtraSmall
 import com.sonalisulgadle.expensetracker.ui.theme.DmMono
-import com.sonalisulgadle.expensetracker.util.formatAmount
+import com.sonalisulgadle.expensetracker.util.FormatUtils
 
 @Composable
 fun TotalSpentCard(
@@ -76,7 +76,7 @@ fun TotalSpentCard(
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
-                        text = formatAmount(totalSpent),
+                        text = FormatUtils.formatAmount(totalSpent),
                         style = MaterialTheme.typography.displayLarge.copy(
                             fontFamily = DmMono,
                             letterSpacing = (-1).sp

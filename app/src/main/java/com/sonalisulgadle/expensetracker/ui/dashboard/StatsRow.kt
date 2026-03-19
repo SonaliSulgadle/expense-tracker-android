@@ -25,8 +25,8 @@ import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingMedium
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.RadiusLarge
 import com.sonalisulgadle.expensetracker.ui.theme.MonoTextStyle
-import com.sonalisulgadle.expensetracker.util.formatAmount
-import com.sonalisulgadle.expensetracker.util.getDaysOfMonth
+import com.sonalisulgadle.expensetracker.util.DateUtils
+import com.sonalisulgadle.expensetracker.util.FormatUtils
 
 data class StatCardData(
     val label: String,
@@ -52,7 +52,7 @@ fun StatsRow(
         )
         StatCard(
             label = stringResource(R.string.avg_per_day),
-            value = "₩${formatAmount(totalSpent / getDaysOfMonth())}",
+            value = "₩${FormatUtils.formatAmount(totalSpent / DateUtils.getDaysOfMonth())}",
             valueColor = AmberPrimary,
             modifier = Modifier.weight(1f)
         )

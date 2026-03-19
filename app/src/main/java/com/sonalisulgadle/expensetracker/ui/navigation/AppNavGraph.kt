@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sonalisulgadle.expensetracker.ui.dashboard.DashboardScreen
+import com.sonalisulgadle.expensetracker.ui.expense.ExpenseListScreen
 
 @Composable
 fun AppNavGraph(
@@ -34,7 +35,9 @@ fun AppNavGraph(
         }
 
         composable(Screen.ExpenseList.route) {
-            // ExpenseListScreen — coming next
+            ExpenseListScreen(
+                onBackClick = { navController.navigateUp() }
+            )
         }
 
         composable(

@@ -9,8 +9,9 @@ import com.sonalisulgadle.expensetracker.domain.usecase.AddExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.DeleteExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetCategoryTotalsUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetExpensesUseCase
+import com.sonalisulgadle.expensetracker.domain.usecase.RestoreExpenseUseCase
 import com.sonalisulgadle.expensetracker.util.Constants
-import com.sonalisulgadle.expensetracker.util.formatCurrentMonth
+import com.sonalisulgadle.expensetracker.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,8 +27,11 @@ class ExpenseViewModel @Inject constructor(
     private val addExpenseUseCase: AddExpenseUseCase,
     private val getExpensesUseCase: GetExpensesUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
-    private val getCategoryTotalsUseCase: GetCategoryTotalsUseCase
+    private val getCategoryTotalsUseCase: GetCategoryTotalsUseCase,
+    private val restoreExpenseUseCase: RestoreExpenseUseCase
 ) : ViewModel() {
+
+    private var lastDeletedExpense: Expense? = null
 
     // UI state for add expense action (Idle, Categorizing, Success, Error)
     private val _addExpenseState = MutableStateFlow<ExpenseUiState>(ExpenseUiState.Idle)
@@ -39,18 +43,25 @@ class ExpenseViewModel @Inject constructor(
             getExpensesUseCase(),
             getCategoryTotalsUseCase()
         ) { expenses, categoryTotals ->
+            val total = expenses.sumOf { it.amount }
             ExpenseListUiState(
                 expenses = expenses,
+                groupedExpenses = groupExpensesByMonth(expenses),
                 categoryTotals = categoryTotals,
-                totalSpent = expenses.sumOf { it.amount },
-                isLoading = false,
-                currentMonth = formatCurrentMonth()
+                totalSpent = total,
+                avgPerDay = total / DateUtils.getDaysOfMonth(),
+                currentMonth = DateUtils.formatCurrentMonth(),
+                isLoading = false
             )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(Constants.FLOW_STOP_TIMEOUT_MS),
             initialValue = ExpenseListUiState(isLoading = true)
         )
+
+    private fun groupExpensesByMonth(expenses: List<Expense>): Map<String, List<Expense>> {
+        return expenses.groupBy { DateUtils.formatMonthYear(it.timestamp) }
+    }
 
     fun addExpense(description: String, amount: Double) {
         viewModelScope.launch {
@@ -77,8 +88,15 @@ class ExpenseViewModel @Inject constructor(
     }
 
     fun deleteExpense(expense: Expense) {
+        lastDeletedExpense = expense
         viewModelScope.launch {
             deleteExpenseUseCase(expense)
+        }
+    }
+
+    fun undoDelete(expense: Expense) {
+        viewModelScope.launch {
+            restoreExpenseUseCase(expense)
         }
     }
 
