@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +46,11 @@ fun AddExpenseFab(
                     colors = listOf(AmberPrimary, AmberGradientEnd)
                 )
             )
-            .clickable { onClick() }
+            .clickable(
+                role = Role.Button,
+                onClickLabel = stringResource(R.string.add_expense)
+            ) { onClick() }
+            .defaultMinSize(minHeight = 48.dp)
             .padding(PaddingLarge),
         contentAlignment = Alignment.Center
     ) {

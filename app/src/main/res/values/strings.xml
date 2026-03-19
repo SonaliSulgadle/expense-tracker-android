@@ -37,4 +37,12 @@
     <string name="symbol_currency_won">₩</string>
     <string name="label_default_amount">0</string>
     <string name="label_ai_state_indicator">ai_state</string>
+
+    <string name="all_expenses">All Expenses</string>
+    <string name="expenses_count">expenses</string>
+    <string name="back">Back</string>
+    <string name="delete_expense">Delete expense</string>
+    <string name="snackbar_expense_deleted">Expense deleted</string>
+    <string name="snackbar_undo">Undo</string>
+
 </resources>

@@ -31,15 +31,17 @@ import com.sonalisulgadle.expensetracker.ui.components.AiBadge
 import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.ExpenseIconSize
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingMedium
+import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingSmall
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.RadiusLarge
 import com.sonalisulgadle.expensetracker.ui.theme.MonoTextStyle
-import com.sonalisulgadle.expensetracker.util.formatAmount
+import com.sonalisulgadle.expensetracker.util.FormatUtils
 
 @Composable
 fun ExpenseItem(
+    modifier: Modifier = Modifier,
     expense: Expense,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    trailingContent: @Composable (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -90,15 +92,18 @@ fun ExpenseItem(
                     if (expense.isAiCategorized) AiBadge()
                 }
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "-₩${formatAmount(expense.amount)}",
-                style = MonoTextStyle.copy(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = MaterialTheme.colorScheme.error
-            )
+            Spacer(modifier = Modifier.width(PaddingSmall))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = "-₩${FormatUtils.formatAmount(expense.amount)}",
+                    style = MonoTextStyle.copy(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    color = MaterialTheme.colorScheme.error
+                )
+                trailingContent?.invoke()
+            }
         }
     }
 }
