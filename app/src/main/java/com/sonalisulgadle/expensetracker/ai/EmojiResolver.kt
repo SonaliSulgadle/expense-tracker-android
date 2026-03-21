@@ -1,5 +1,7 @@
 package com.sonalisulgadle.expensetracker.ai
 
+import com.sonalisulgadle.expensetracker.util.Constants.DEFAULT_EMOJI
+
 object EmojiResolver {
 
     fun resolve(description: String): String {
@@ -13,8 +15,6 @@ object EmojiResolver {
         }
         return null
     }
-
-    private const val DEFAULT_EMOJI = "💸"
 
     private val EMOJI_RULES: List<Pair<List<String>, String>> = listOf(
 
