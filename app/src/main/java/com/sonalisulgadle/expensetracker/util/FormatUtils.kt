@@ -1,5 +1,6 @@
 package com.sonalisulgadle.expensetracker.util
 
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -11,4 +12,9 @@ object FormatUtils {
 
     fun formatAmount(amount: Double): String =
         numberFormat.format(amount)
+
+    fun formatPercentage(value: Double): String =
+        value.toBigDecimal()
+            .setScale(1, RoundingMode.HALF_UP)
+            .toPlainString()
 }

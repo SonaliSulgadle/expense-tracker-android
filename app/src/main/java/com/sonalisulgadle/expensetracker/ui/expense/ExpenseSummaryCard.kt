@@ -37,7 +37,7 @@ fun ExpenseSummaryCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(Dimens.RadiusBottomSheet),
+        shape = RoundedCornerShape(Dimens.RadiusCard),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),

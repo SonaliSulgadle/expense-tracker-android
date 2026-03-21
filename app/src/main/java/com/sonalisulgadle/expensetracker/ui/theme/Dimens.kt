@@ -16,7 +16,7 @@ object Dimens {
     val RadiusMedium = 12.dp
     val RadiusLarge = 14.dp
     val RadiusExtraLarge = 16.dp
-    val RadiusBottomSheet = 20.dp
+    val RadiusCard = 20.dp
     val RadiusSheet = 28.dp
 
     // Component sizes
