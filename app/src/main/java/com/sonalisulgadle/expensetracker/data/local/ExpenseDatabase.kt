@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [ExpenseEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class ExpenseDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao

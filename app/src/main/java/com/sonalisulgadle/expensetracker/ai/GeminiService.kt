@@ -4,9 +4,15 @@ import com.google.ai.client.generativeai.GenerativeModel
 import com.sonalisulgadle.expensetracker.BuildConfig
 import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.util.Constants
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val AI_CONFIDENCE_NONE = 0.0
+private const val MAX_RETRIES = 3
+private const val RETRY_DELAY_MS = 1000L
 
 @Singleton
 class GeminiService @Inject constructor() : CategoryRepository {
@@ -22,20 +28,30 @@ class GeminiService @Inject constructor() : CategoryRepository {
     )
 
     override suspend fun categorize(description: String): CategoryResult {
-        return try {
-            val prompt = CategoryPromptBuilder.build(description)
-            val response = model.generateContent(prompt)
-            val rawText = response.text ?: return fallback(description)
-            val geminiResponse = parseResponse(rawText)
+        var lastException: Exception? = null
 
-            CategoryResult(
-                category = geminiResponse.category,
-                emoji = EmojiResolver.resolve(description),  // local resolution
-                confidence = geminiResponse.confidence
-            )
-        } catch (e: Exception) {
-            fallback(description)
+        repeat(MAX_RETRIES) { attempt ->
+            try {
+                val prompt = CategoryPromptBuilder.build(description)
+                val response = model.generateContent(prompt)
+                val rawText = response.text ?: return@repeat
+                val geminiResponse = parseResponse(rawText)
+                return CategoryResult(
+                    category = geminiResponse.category,
+                    emoji = EmojiResolver.resolve(description),
+                    confidence = geminiResponse.confidence
+                )
+            } catch (e: Exception) {
+                lastException = e
+                Timber.w(e, "Gemini attempt ${attempt + 1} of $MAX_RETRIES failed")
+                if (attempt < MAX_RETRIES - 1) {
+                    delay(RETRY_DELAY_MS * (attempt + 1))
+                }
+            }
         }
+
+        Timber.e(lastException, "All $MAX_RETRIES Gemini attempts failed, using fallback")
+        return fallback(description)
     }
 
     private fun parseResponse(raw: String): GeminiCategoryResponse {
@@ -47,7 +63,7 @@ class GeminiService @Inject constructor() : CategoryRepository {
                 .trim()
             json.decodeFromString<GeminiCategoryResponse>(cleaned)
         } catch (e: Exception) {
-            GeminiCategoryResponse(category = "Other", confidence = 0.0)
+            GeminiCategoryResponse(category = "Other", confidence = AI_CONFIDENCE_NONE)
         }
     }
 

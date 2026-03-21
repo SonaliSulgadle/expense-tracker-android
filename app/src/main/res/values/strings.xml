@@ -44,5 +44,11 @@
     <string name="delete_expense">Delete expense</string>
     <string name="snackbar_expense_deleted">Expense deleted</string>
     <string name="snackbar_undo">Undo</string>
+    <string name="error_loading_expenses">Failed to load expenses. Please restart the app.</string>
 
+    <string name="category_breakdown">Category breakdown</string>
+    <string name="category_expense_count">%d expenses this month</string>
+    <string name="stat_avg_expense">Avg expense</string>
+    <string name="stat_highest">Highest</string>
+    <string name="stat_of_total">% of total</string>
 </resources>

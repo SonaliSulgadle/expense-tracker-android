@@ -13,8 +13,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import java.math.RoundingMode
 import javax.inject.Inject
-import kotlin.collections.sortedByDescending
+
+private const val MAX_TOP_ITEMS = 5
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
@@ -44,8 +46,7 @@ class CategoryViewModel @Inject constructor(
             averageExpense = if (categoryExpenses.isEmpty()) 0.0
             else totalSpent / categoryExpenses.size,
             highestExpense = highest,
-            percentageOfTotal = if (totalAllExpenses == 0.0) 0.0
-            else (totalSpent / totalAllExpenses) * 100,
+            percentageOfTotal = getPercentageOfTotal(totalAllExpenses, totalSpent),
             topItems = buildTopItems(categoryExpenses, highest),
             expenses = categoryExpenses,
             isLoading = false
@@ -56,6 +57,13 @@ class CategoryViewModel @Inject constructor(
         initialValue = CategoryDetailUiState(isLoading = true)
     )
 
+    private fun getPercentageOfTotal(totalAllExpenses: Double, totalSpent: Double): Double =
+        if (totalAllExpenses == 0.0) 0.0
+        else ((totalSpent / totalAllExpenses) * 100)
+            .toBigDecimal()
+            .setScale(1, RoundingMode.HALF_UP)
+            .toDouble()
+
     private fun buildTopItems(
         expenses: List<Expense>,
         highest: Double
@@ -63,7 +71,7 @@ class CategoryViewModel @Inject constructor(
         if (highest == 0.0) return emptyList()
         return expenses
             .sortedByDescending { it.amount }
-            .take(5)
+            .take(MAX_TOP_ITEMS)
             .map { expense ->
                 TopItem(
                     description = expense.description,

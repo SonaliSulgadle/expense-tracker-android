@@ -53,6 +53,8 @@ import com.sonalisulgadle.expensetracker.ui.theme.MonoTextStyle
 import com.sonalisulgadle.expensetracker.util.DateUtils
 import kotlinx.coroutines.launch
 
+private const val SWIPE_DISMISS_THRESHOLD = 0.4f
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(
@@ -191,7 +193,7 @@ private fun SwipeToDeleteExpenseItem(
             }
         },
         // Require swipe past 40% of width to trigger delete
-        positionalThreshold = { totalDistance -> totalDistance * 0.4f }
+        positionalThreshold = { totalDistance -> totalDistance * SWIPE_DISMISS_THRESHOLD }
     )
 
     // Reset dismissed state when expense changes

@@ -5,6 +5,7 @@ import com.sonalisulgadle.expensetracker.util.Constants.DEFAULT_EMOJI
 object EmojiResolver {
 
     fun resolve(description: String): String {
+        if (description.isBlank()) return DEFAULT_EMOJI
         val input = description.trim().lowercase()
         return findMatch(input) ?: DEFAULT_EMOJI
     }
