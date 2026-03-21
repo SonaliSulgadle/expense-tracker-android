@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +47,7 @@ fun AddExpenseSheet(
     val sheetState = rememberAddExpenseSheetState()
 
     val isLoading = uiState is ExpenseUiState.Categorizing
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(uiState) {
         if (uiState is ExpenseUiState.Success) onDismiss()
@@ -107,6 +109,7 @@ fun AddExpenseSheet(
             }
         }
 
+
         // Submit button
         Box(
             modifier = Modifier
@@ -121,9 +124,10 @@ fun AddExpenseSheet(
                     )
                 )
                 .clickable(enabled = !isLoading) {
+                    keyboardController?.hide()
                     if (sheetState.validate()) {
-                        sheetState.parsedAmount()?.let { amount ->
-                            onAddExpense(sheetState.description, amount)
+                        sheetState.parsedAmount()?.let {
+                            onAddExpense(sheetState.description, it)
                         }
                     }
                 }

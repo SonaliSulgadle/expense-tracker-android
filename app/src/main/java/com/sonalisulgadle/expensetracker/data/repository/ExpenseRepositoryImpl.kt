@@ -7,7 +7,9 @@ import com.sonalisulgadle.expensetracker.data.mapper.toEntity
 import com.sonalisulgadle.expensetracker.domain.model.Expense
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class ExpenseRepositoryImpl @Inject constructor(
@@ -15,9 +17,12 @@ class ExpenseRepositoryImpl @Inject constructor(
 ) : ExpenseRepository {
 
     override fun getAllExpenses(): Flow<List<Expense>> =
-        dao.getAllExpenses().map { entities ->
-            entities.map { it.toDomain() }
-        }
+        dao.getAllExpenses()
+            .map { entities -> entities.map { it.toDomain() } }
+            .catch { e ->
+                Timber.e(e, "Error fetching expenses")
+                emit(emptyList())
+            }
 
     override fun getCategoryTotals(): Flow<List<CategoryTotal>> =
         dao.getCategoryTotals()

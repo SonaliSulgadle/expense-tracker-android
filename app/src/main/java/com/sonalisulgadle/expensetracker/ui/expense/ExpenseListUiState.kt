@@ -11,5 +11,5 @@ data class ExpenseListUiState(
     val avgPerDay: Double = 0.0,
     val currentMonth: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: Int? = null
 )

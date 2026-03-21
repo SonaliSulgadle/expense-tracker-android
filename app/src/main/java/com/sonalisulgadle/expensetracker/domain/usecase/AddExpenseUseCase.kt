@@ -6,6 +6,9 @@ import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
 import javax.inject.Inject
 
+private const val MAX_DESCRIPTION_LENGTH = 200
+private const val MAX_AMOUNT = 999_999_999.0
+
 class AddExpenseUseCase @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val categoryRepository: CategoryRepository
@@ -18,8 +21,14 @@ class AddExpenseUseCase @Inject constructor(
             if (description.isBlank()) {
                 return Result.failure(ExpenseError.EmptyDescription())
             }
+            if (description.length > MAX_DESCRIPTION_LENGTH) {
+                return Result.failure(ExpenseError.DescriptionTooLong())
+            }
             if (amount <= 0) {
                 return Result.failure(ExpenseError.InvalidAmount())
+            }
+            if (amount > MAX_AMOUNT) {
+                return Result.failure(ExpenseError.AmountTooLarge())
             }
 
             val categoryResult = categoryRepository.categorize(description)
