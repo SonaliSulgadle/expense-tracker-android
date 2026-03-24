@@ -20,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens
 
@@ -105,7 +107,33 @@ fun CategoryDetailScreen(
                 }
             }
 
-            // TODO - Chart and expense list
+            // ---- Top items section header ----
+
+            item {
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(tween(700))
+                ) {
+                    CategorySectionHeader(
+                        title = stringResource(R.string.top_items),
+                        modifier = Modifier.padding(
+                            top = Dimens.PaddingSmall
+                        )
+                    )
+                }
+            }
+
+            // ---- Top items bar chart ----
+            item {
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(tween(800))
+                ) {
+                    CategoryTopItems(
+                        topItems = uiState.topItems
+                    )
+                }
+            }
         }
     }
 }
