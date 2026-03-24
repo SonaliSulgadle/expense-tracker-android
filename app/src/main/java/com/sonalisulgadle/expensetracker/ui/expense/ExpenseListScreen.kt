@@ -59,6 +59,7 @@ private const val SWIPE_DISMISS_THRESHOLD = 0.4f
 @Composable
 fun ExpenseListScreen(
     onBackClick: () -> Unit,
+    onNavigateToCategory: (String, String) -> Unit,
     viewModel: ExpenseViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.expenseListState.collectAsStateWithLifecycle()
@@ -107,7 +108,7 @@ fun ExpenseListScreen(
             // ---- Category filter chips ----
             item {
                 CategoryChipsRow(
-                    categories = uiState.categoryTotals.map { it.category },
+                    categoryTotals = uiState.categoryTotals,
                     modifier = Modifier.padding(vertical = Dimens.PaddingSmall)
                 )
             }
@@ -155,6 +156,12 @@ fun ExpenseListScreen(
                                 }
                             }
                         },
+                        onItemClick = {
+                            onNavigateToCategory(
+                                expense.category,
+                                expense.categoryEmoji
+                            )
+                        },
                         modifier = Modifier.padding(
                             horizontal = Dimens.PaddingExtraLarge,
                             vertical = Dimens.PaddingExtraSmall
@@ -177,6 +184,7 @@ fun ExpenseListScreen(
 private fun SwipeToDeleteExpenseItem(
     expense: Expense,
     onDelete: (Expense) -> Unit,
+    onItemClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Track if item has been dismissed to avoid re-triggering
@@ -210,7 +218,7 @@ private fun SwipeToDeleteExpenseItem(
             DeleteBackground(dismissState.targetValue)
         }
     ) {
-        ExpenseItemWithDate(expense = expense)
+        ExpenseItemWithDate(expense = expense, onClick = onItemClick)
     }
 }
 
@@ -251,12 +259,13 @@ private fun DeleteBackground(
 @Composable
 private fun ExpenseItemWithDate(
     expense: Expense,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         ExpenseItem(
             expense = expense,
-            onClick = {},
+            onClick = onClick,
             trailingContent = {
                 Text(
                     text = formatExpenseDate(expense.timestamp),

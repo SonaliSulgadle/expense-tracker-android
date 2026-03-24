@@ -44,7 +44,7 @@ import com.sonalisulgadle.expensetracker.ui.theme.Dimens.RadiusSheet
 @Composable
 fun DashboardScreen(
     onNavigateToExpenseList: () -> Unit,
-    onNavigateToCategory: (String) -> Unit,
+    onNavigateToCategory: (String, String) -> Unit,
     viewModel: ExpenseViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.expenseListState.collectAsStateWithLifecycle()
@@ -116,8 +116,11 @@ fun DashboardScreen(
 
             item {
                 CategoryChipsRow(
-                    categories = uiState.categoryTotals.map { it.category },
-                    modifier = Modifier.padding(vertical = PaddingSmall)
+                    modifier = Modifier.padding(vertical = PaddingSmall),
+                    categoryTotals = uiState.categoryTotals,
+                    onCategoryClick = { name, emoji ->
+                        onNavigateToCategory(name, emoji)
+                    }
                 )
             }
 
@@ -141,7 +144,12 @@ fun DashboardScreen(
                     ) {
                         ExpenseItem(
                             expense = expense,
-                            onClick = { onNavigateToCategory(expense.category) },
+                            onClick = {
+                                onNavigateToCategory(
+                                    expense.category,
+                                    expense.categoryEmoji
+                                )
+                            },
                             modifier = Modifier.padding(
                                 horizontal = PaddingExtraLarge, vertical = PaddingExtraSmall
                             )

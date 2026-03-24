@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,6 +14,8 @@ android {
     compileSdk {
         version = release(36)
     }
+    val geminiKey =
+        gradleLocalProperties(rootDir, providers).getProperty("GEMINI_API_KEY") ?: ""
 
     defaultConfig {
         applicationId = "com.sonalisulgadle.expensetracker"
@@ -21,8 +25,6 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Reads GEMINI_API_KEY from local.properties and bakes it into BuildConfig
-        val geminiKey = project.findProperty("GEMINI_API_KEY")?.toString() ?: ""
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
     }
 
@@ -81,9 +83,9 @@ dependencies {
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
 
-    // --- Gemini AI ---
-    implementation(libs.generativeai)
-
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.okhttp.logging)
     // --- Vico Charts ---
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)

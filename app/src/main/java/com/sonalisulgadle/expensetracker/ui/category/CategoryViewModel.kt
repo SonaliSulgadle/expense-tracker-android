@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.math.RoundingMode
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 private const val MAX_TOP_ITEMS = 5
@@ -26,7 +28,14 @@ class CategoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val categoryName: String =
-        savedStateHandle.get<String>(Constants.NAV_ARG_CATEGORY_NAME).orEmpty()
+        savedStateHandle.get<String>(Constants.NAV_ARG_CATEGORY_NAME)
+            ?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) }
+            .orEmpty()
+
+    private val categoryEmoji: String =
+        savedStateHandle.get<String>(Constants.NAV_ARG_CATEGORY_EMOJI)
+            ?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) }
+            .orEmpty()
 
     val uiState: StateFlow<CategoryDetailUiState> = combine(
         getExpensesByCategory(categoryName),
@@ -40,7 +49,7 @@ class CategoryViewModel @Inject constructor(
 
         CategoryDetailUiState(
             categoryName = categoryName,
-            categoryEmoji = emoji,
+            categoryEmoji = categoryEmoji,
             totalSpent = totalSpent,
             expenseCount = categoryExpenses.size,
             averageExpense = if (categoryExpenses.isEmpty()) 0.0

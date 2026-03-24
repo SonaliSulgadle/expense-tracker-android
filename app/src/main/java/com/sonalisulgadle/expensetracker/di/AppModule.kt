@@ -2,6 +2,8 @@ package com.sonalisulgadle.expensetracker.di
 
 import android.content.Context
 import androidx.room.Room
+import com.sonalisulgadle.expensetracker.BuildConfig
+import com.sonalisulgadle.expensetracker.ai.GeminiApi
 import com.sonalisulgadle.expensetracker.ai.GeminiService
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDao
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDatabase
@@ -15,6 +17,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -33,6 +42,47 @@ object AppModule {
     @Provides
     fun provideExpenseDao(database: ExpenseDatabase): ExpenseDao =
         database.expenseDao()
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+            .addInterceptor(
+                HttpLoggingInterceptor { message ->
+                    Timber.tag("OkHttp").d(message)
+                }.apply {
+                    level = if (BuildConfig.DEBUG)
+                        HttpLoggingInterceptor.Level.BODY
+                    else
+                        HttpLoggingInterceptor.Level.NONE
+                }
+            )
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl("https://generativelanguage.googleapis.com/")
+            .client(okHttpClient)
+            .addConverterFactory(
+                Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                }.asConverterFactory("application/json".toMediaType())
+            )
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideGeminiApi(retrofit: Retrofit): GeminiApi =
+        retrofit.create(GeminiApi::class.java)
 }
 
 @Module
