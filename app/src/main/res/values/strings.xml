@@ -32,7 +32,7 @@
     <string name="temp_avatar_initials">SS</string>
     <string name="temp_current_month">March 2025</string>
     <string name="empty_icon_text">💸</string>
-    <string name="label_ai_badge">AI\n</string>
+    <string name="label_ai_badge">AI</string>
     <string name="symbol_add">+</string>
     <string name="symbol_currency_won">₩</string>
     <string name="label_default_amount">0</string>
@@ -51,4 +51,5 @@
     <string name="stat_avg_expense">Avg expense</string>
     <string name="stat_highest">Highest</string>
     <string name="stat_of_total">% of total</string>
+    <string name="top_items">Top items</string>
 </resources>

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sonalisulgadle.expensetracker.domain.model.Expense
@@ -33,6 +34,7 @@ import com.sonalisulgadle.expensetracker.ui.theme.Dimens.ExpenseIconSize
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingMedium
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingSmall
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.RadiusLarge
+import com.sonalisulgadle.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.sonalisulgadle.expensetracker.ui.theme.MonoTextStyle
 import com.sonalisulgadle.expensetracker.util.FormatUtils
 
@@ -107,3 +109,21 @@ fun ExpenseItem(
         }
     }
 }
+
+@Composable
+@PreviewLightDark
+fun PreviewExpenseItem() {
+    ExpenseTrackerTheme {
+        ExpenseItem(expense = expense, onClick = {})
+    }
+}
+
+val expense = Expense(
+    id = 1,
+    description = "Sample Expense",
+    category = "Food",
+    amount = 15000.0,
+    timestamp = 1774318199,
+    categoryEmoji = "🍕",
+    isAiCategorized = true
+)

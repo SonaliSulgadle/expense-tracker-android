@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sonalisulgadle.expensetracker.R
+import com.sonalisulgadle.expensetracker.data.local.CategoryTotal
 import com.sonalisulgadle.expensetracker.ui.theme.AmberDim
 import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingExtraLarge
@@ -28,25 +29,35 @@ import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingSmall
 
 @Composable
 fun CategoryChipsRow(
-    categories: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    categoryTotals: List<CategoryTotal>,
+    onCategoryClick: ((String, String) -> Unit)? = null
 ) {
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     val allLabel = stringResource(R.string.all)
-    val allCategories = listOf(allLabel) + categories
 
     LazyRow(
         contentPadding = PaddingValues(horizontal = PaddingExtraLarge),
         horizontalArrangement = Arrangement.spacedBy(PaddingSmall),
         modifier = modifier
     ) {
-        items(allCategories) { category ->
-            val isSelected = category == (selectedCategory ?: allLabel)
+        item {
             CategoryChip(
-                label = category,
-                isSelected = isSelected,
+                label = allLabel,
+                isSelected = selectedCategory == null,
+                onClick = { selectedCategory = null }
+            )
+        }
+        items(
+            items = categoryTotals,
+            key = { it.category }
+        ) { total ->
+            CategoryChip(
+                label = total.category,
+                isSelected = selectedCategory == total.category,
                 onClick = {
-                    selectedCategory = if (isSelected) null else category
+                    selectedCategory = total.category
+                    onCategoryClick?.invoke(total.category, total.categoryEmoji)
                 }
             )
         }

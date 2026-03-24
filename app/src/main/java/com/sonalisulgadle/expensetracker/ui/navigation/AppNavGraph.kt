@@ -28,9 +28,9 @@ fun AppNavGraph(
                 onNavigateToExpenseList = {
                     navController.navigate(Screen.ExpenseList.route)
                 },
-                onNavigateToCategory = { categoryName ->
+                onNavigateToCategory = { categoryName, categoryEmoji ->
                     navController.navigate(
-                        Screen.CategoryDetail.createRoute(categoryName)
+                        Screen.CategoryDetail.createRoute(categoryName, categoryEmoji)
                     )
                 }
             )
@@ -38,7 +38,12 @@ fun AppNavGraph(
 
         composable(Screen.ExpenseList.route) {
             ExpenseListScreen(
-                onBackClick = { navController.navigateUp() }
+                onBackClick = { navController.navigateUp() },
+                onNavigateToCategory = { name, emoji ->
+                    navController.navigate(
+                        Screen.CategoryDetail.createRoute(name, emoji)
+                    )
+                }
             )
         }
 
@@ -46,6 +51,9 @@ fun AppNavGraph(
             route = Screen.CategoryDetail.route,
             arguments = listOf(
                 navArgument(Constants.NAV_ARG_CATEGORY_NAME) {
+                    type = NavType.StringType
+                },
+                navArgument(Constants.NAV_ARG_CATEGORY_EMOJI) {
                     type = NavType.StringType
                 }
             )
