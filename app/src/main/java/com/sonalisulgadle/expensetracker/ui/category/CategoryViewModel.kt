@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonalisulgadle.expensetracker.domain.model.Expense
+import com.sonalisulgadle.expensetracker.domain.usecase.DeleteExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetExpensesByCategoryUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetExpensesUseCase
+import com.sonalisulgadle.expensetracker.domain.usecase.RestoreExpenseUseCase
 import com.sonalisulgadle.expensetracker.util.Constants
 import com.sonalisulgadle.expensetracker.util.Constants.DEFAULT_EMOJI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +15,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.math.RoundingMode
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
@@ -24,7 +28,9 @@ private const val MAX_TOP_ITEMS = 5
 class CategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getExpensesByCategory: GetExpensesByCategoryUseCase,
-    private val getAllExpenses: GetExpensesUseCase
+    private val getAllExpenses: GetExpensesUseCase,
+    private val deleteExpenseUseCase: DeleteExpenseUseCase,
+    private val restoreExpenseUseCase: RestoreExpenseUseCase
 ) : ViewModel() {
 
     private val categoryName: String =
@@ -88,5 +94,19 @@ class CategoryViewModel @Inject constructor(
                     percentage = (expense.amount / highest).toFloat()
                 )
             }
+    }
+
+    fun deleteExpense(expense: Expense) {
+        viewModelScope.launch {
+            deleteExpenseUseCase(expense)
+            Timber.d("Expense deleted from category: ${expense.description}")
+        }
+    }
+
+    fun undoDelete(expense: Expense) {
+        viewModelScope.launch {
+            restoreExpenseUseCase(expense)
+            Timber.d("Expense restored: ${expense.description}")
+        }
     }
 }
