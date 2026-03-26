@@ -52,4 +52,5 @@
     <string name="stat_highest">Highest</string>
     <string name="stat_of_total">% of total</string>
     <string name="top_items">Top items</string>
+    <string name="spending_by_category">Spending by category</string>
 </resources>

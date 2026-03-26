@@ -15,8 +15,6 @@ hilt = "2.52"
 room = "2.7.1"
 navigation = "2.9.0"
 camerax = "1.4.2"
-generativeai = "0.9.0"
-vico = "2.0.0-beta.2"
 kotlinxSerialization = "1.7.0"
 hiltNavigationCompose = "1.2.0"
 lifecycleViewmodelCompose = "2.10.0"
@@ -61,13 +59,6 @@ camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = 
 camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
-
-# Gemini AI
-generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
-
-# Vico Charts
-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
-vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 # Kotlinx Serialization (for parsing Gemini JSON responses)
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }

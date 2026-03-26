@@ -86,9 +86,6 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.okhttp.logging)
-    // --- Vico Charts ---
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
 
     // --- Kotlinx Serialization ---
     implementation(libs.kotlinx.serialization.json)
