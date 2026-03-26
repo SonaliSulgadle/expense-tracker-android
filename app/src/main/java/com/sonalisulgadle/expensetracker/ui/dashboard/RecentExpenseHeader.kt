@@ -17,8 +17,9 @@ import com.sonalisulgadle.expensetracker.ui.theme.Dimens.PaddingSmall
 
 @Composable
 fun RecentExpensesHeader(
-    onSeeAllClick: () -> Unit,
-    modifier: Modifier = Modifier
+    title: String,
+    modifier: Modifier = Modifier,
+    onSeeAllClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -28,15 +29,17 @@ fun RecentExpensesHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.recent_expenses),
+            text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
-        Text(
-            text = stringResource(R.string.see_all),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onSeeAllClick() }
-        )
+        onSeeAllClick?.let { onSeeAllClick ->
+            Text(
+                text = stringResource(R.string.see_all),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onSeeAllClick() }
+            )
+        }
     }
 }

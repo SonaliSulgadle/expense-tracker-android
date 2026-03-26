@@ -17,4 +17,12 @@ object FormatUtils {
         value.toBigDecimal()
             .setScale(1, RoundingMode.HALF_UP)
             .toPlainString()
+
+    fun formatCompactAmount(amount: Double): String {
+        return when {
+            amount >= 1_000_000 -> "${(amount / 1_000_000).toBigDecimal().setScale(1, RoundingMode.HALF_UP)}M"
+            amount >= 1_000 -> "${(amount / 1_000).toBigDecimal().setScale(0, RoundingMode.HALF_UP)}k"
+            else -> formatAmount(amount)
+        }
+    }
 }

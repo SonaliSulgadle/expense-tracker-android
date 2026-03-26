@@ -27,9 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.components.EmptyState
 import com.sonalisulgadle.expensetracker.ui.expense.AddExpenseSheet
 import com.sonalisulgadle.expensetracker.ui.expense.ExpenseItem
@@ -114,6 +116,34 @@ fun DashboardScreen(
                 }
             }
 
+            // ---- Chart section header ----
+            item {
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(tween(630))
+                ) {
+                    RecentExpensesHeader(
+                        title = stringResource(R.string.spending_by_category),
+                        onSeeAllClick = null
+                    )
+                }
+            }
+
+            // ---- Spending chart ----
+            item {
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(tween(650))
+                ) {
+                    SpendingBarChart(
+                        categoryTotals = uiState.categoryTotals,
+                        modifier = Modifier.padding(
+                            horizontal = PaddingExtraLarge,
+                            vertical = PaddingSmall
+                        )
+                    )
+                }
+            }
             item {
                 CategoryChipsRow(
                     modifier = Modifier.padding(vertical = PaddingSmall),
@@ -126,6 +156,7 @@ fun DashboardScreen(
 
             item {
                 RecentExpensesHeader(
+                    title = stringResource(R.string.recent_expenses),
                     onSeeAllClick = onNavigateToExpenseList
                 )
             }
