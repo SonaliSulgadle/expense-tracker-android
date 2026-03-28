@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.expense.ExpenseListUiState
 import com.sonalisulgadle.expensetracker.ui.theme.AmberGradientEnd
@@ -29,6 +28,8 @@ import com.sonalisulgadle.expensetracker.ui.theme.OnPrimaryDark
 @Composable
 fun DashboardHeader(
     modifier: Modifier = Modifier,
+    userName: String,
+    userInitial: String,
     uiState: ExpenseListUiState,
     onAvatarClick: () -> Unit = {},
 ) {
@@ -39,13 +40,16 @@ fun DashboardHeader(
     ) {
         Column {
             Text(
-                text = stringResource(R.string.greeting),
-                style = MaterialTheme.typography.labelSmall,
+                text = if (userName.isNotBlank())
+                    "${stringResource(R.string.greeting)}, $userName"
+                else
+                    stringResource(R.string.greeting),
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Text(
-                text = uiState.currentMonth.orEmpty(),
+                text = uiState.currentMonth,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -63,7 +67,7 @@ fun DashboardHeader(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = stringResource(R.string.temp_avatar_initials),
+                text = userInitial.ifBlank { "?" },
                 style = MaterialTheme.typography.labelMedium,
                 color = OnPrimaryDark,
                 fontWeight = FontWeight.SemiBold

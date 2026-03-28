@@ -8,8 +8,10 @@ import com.sonalisulgadle.expensetracker.ai.GeminiService
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDao
 import com.sonalisulgadle.expensetracker.data.local.ExpenseDatabase
 import com.sonalisulgadle.expensetracker.data.repository.ExpenseRepositoryImpl
+import com.sonalisulgadle.expensetracker.data.repository.UserPreferencesRepositoryImpl
 import com.sonalisulgadle.expensetracker.domain.repository.CategoryRepository
 import com.sonalisulgadle.expensetracker.domain.repository.ExpenseRepository
+import com.sonalisulgadle.expensetracker.domain.repository.UserPreferencesRepository
 import com.sonalisulgadle.expensetracker.util.Constants
 import dagger.Binds
 import dagger.Module
@@ -100,4 +102,10 @@ abstract class RepositoryModule {
     abstract fun bindCategoryRepository(
         impl: GeminiService
     ): CategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserPreferencesRepository(
+        impl: UserPreferencesRepositoryImpl
+    ): UserPreferencesRepository
 }

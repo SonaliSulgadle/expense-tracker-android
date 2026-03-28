@@ -77,6 +77,8 @@ fun DashboardScreen(
                     enter = fadeIn(tween(400)) + slideInVertically(tween(400)) { -20 }
                 ) {
                     DashboardHeader(
+                        userName = uiState.userName,
+                        userInitial = uiState.userInitial,
                         uiState = uiState,
                         modifier = Modifier.padding(
                             start = PaddingExtraLarge, end = PaddingExtraLarge,

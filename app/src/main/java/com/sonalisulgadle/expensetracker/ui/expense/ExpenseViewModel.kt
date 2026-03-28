@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.domain.model.Expense
 import com.sonalisulgadle.expensetracker.domain.model.ExpenseError
+import com.sonalisulgadle.expensetracker.domain.repository.UserPreferencesRepository
 import com.sonalisulgadle.expensetracker.domain.usecase.AddExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.DeleteExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetCategoryTotalsUseCase
@@ -30,7 +31,8 @@ class ExpenseViewModel @Inject constructor(
     private val getExpensesUseCase: GetExpensesUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
     private val getCategoryTotalsUseCase: GetCategoryTotalsUseCase,
-    private val restoreExpenseUseCase: RestoreExpenseUseCase
+    private val restoreExpenseUseCase: RestoreExpenseUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private var lastDeletedExpense: Expense? = null
@@ -43,8 +45,9 @@ class ExpenseViewModel @Inject constructor(
     val expenseListState: StateFlow<ExpenseListUiState> =
         combine(
             getExpensesUseCase(),
-            getCategoryTotalsUseCase()
-        ) { expenses, categoryTotals ->
+            getCategoryTotalsUseCase(),
+            userPreferencesRepository.userName
+        ) { expenses, categoryTotals, userName ->
             val total = expenses.sumOf { it.amount }
             ExpenseListUiState(
                 expenses = expenses,
@@ -53,6 +56,8 @@ class ExpenseViewModel @Inject constructor(
                 totalSpent = total,
                 avgPerDay = total / DateUtils.getDaysOfMonth(),
                 currentMonth = DateUtils.formatCurrentMonth(),
+                userName = userName,
+                userInitial = userName.take(1).uppercase(),
                 isLoading = false
             )
         }.catch { e ->
