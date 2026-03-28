@@ -10,6 +10,8 @@ data class ExpenseListUiState(
     val totalSpent: Double = 0.0,
     val avgPerDay: Double = 0.0,
     val currentMonth: String = "",
+    val userName: String = "",
+    val userInitial: String = "",
     val isLoading: Boolean = false,
     val error: Int? = null
 )

@@ -53,4 +53,11 @@
     <string name="stat_of_total">% of total</string>
     <string name="top_items">Top items</string>
     <string name="spending_by_category">Spending by category</string>
+
+    <string name="onboarding_title">Welcome to Expense Tracker</string>
+    <string name="onboarding_subtitle">What should we call you?</string>
+    <string name="onboarding_name_hint">Your name</string>
+    <string name="onboarding_name_placeholder">e.g. Sonali</string>
+    <string name="onboarding_continue">Get started</string>
+    <string name="onboarding_saving">Saving…</string>
 </resources>
