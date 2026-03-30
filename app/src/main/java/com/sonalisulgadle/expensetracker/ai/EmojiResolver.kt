@@ -12,7 +12,11 @@ object EmojiResolver {
 
     private fun findMatch(input: String): String? {
         for ((keywords, emoji) in EMOJI_RULES) {
-            if (keywords.any { input.contains(it) }) return emoji
+            if (keywords.any { keyword ->
+                    input.contains(
+                        Regex("\\b${Regex.escape(keyword)}\\b")
+                    )
+                }) return emoji
         }
         return null
     }

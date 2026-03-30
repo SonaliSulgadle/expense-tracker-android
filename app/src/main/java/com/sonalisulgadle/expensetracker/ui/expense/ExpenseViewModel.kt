@@ -5,15 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.domain.model.Expense
 import com.sonalisulgadle.expensetracker.domain.model.ExpenseError
-import com.sonalisulgadle.expensetracker.domain.repository.UserPreferencesRepository
 import com.sonalisulgadle.expensetracker.domain.usecase.AddExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.DeleteExpenseUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetCategoryTotalsUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.GetExpensesUseCase
+import com.sonalisulgadle.expensetracker.domain.usecase.GetUserNameUseCase
 import com.sonalisulgadle.expensetracker.domain.usecase.RestoreExpenseUseCase
 import com.sonalisulgadle.expensetracker.util.Constants
 import com.sonalisulgadle.expensetracker.util.DateUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +33,7 @@ class ExpenseViewModel @Inject constructor(
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
     private val getCategoryTotalsUseCase: GetCategoryTotalsUseCase,
     private val restoreExpenseUseCase: RestoreExpenseUseCase,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val getUserNameUseCase: GetUserNameUseCase
 ) : ViewModel() {
 
     private var lastDeletedExpense: Expense? = null
@@ -46,7 +47,7 @@ class ExpenseViewModel @Inject constructor(
         combine(
             getExpensesUseCase(),
             getCategoryTotalsUseCase(),
-            userPreferencesRepository.userName
+            getUserNameUseCase()
         ) { expenses, categoryTotals, userName ->
             val total = expenses.sumOf { it.amount }
             ExpenseListUiState(
@@ -113,7 +114,7 @@ class ExpenseViewModel @Inject constructor(
     private fun resetAddExpenseState() {
         viewModelScope.launch {
             // Small delay so UI can show success briefly before resetting
-            kotlinx.coroutines.delay(Constants.AI_RESET_DELAY_MS)
+            delay(Constants.AI_RESET_DELAY_MS)
             _addExpenseState.value = ExpenseUiState.Idle
         }
     }
