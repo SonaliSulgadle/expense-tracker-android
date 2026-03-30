@@ -22,7 +22,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -66,11 +68,7 @@ class OnboardingViewModelTest {
             buildViewModel()
 
             viewModel.state.test {
-                // First emission is Loading (initial value)
-                assertEquals(
-                    Loading,
-                    awaitItem()
-                )
+                assertEquals(Loading, awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -134,9 +132,7 @@ class OnboardingViewModelTest {
         fun blankNameDoesNotCallUseCase() = runTest {
             viewModel.saveUserName("")
             testDispatcher.scheduler.advanceUntilIdle()
-            verify(saveUserNameUseCase, org.mockito.kotlin.never()).invoke(
-                org.mockito.kotlin.any()
-            )
+            verify(saveUserNameUseCase, never()).invoke(any())
         }
 
         @Test

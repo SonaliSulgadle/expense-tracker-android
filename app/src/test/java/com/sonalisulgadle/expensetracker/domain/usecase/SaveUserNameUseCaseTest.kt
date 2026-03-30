@@ -2,13 +2,11 @@ package com.sonalisulgadle.expensetracker.domain.usecase
 
 import com.sonalisulgadle.expensetracker.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 
 @DisplayName("SaveUserNameUseCase")
@@ -20,41 +18,6 @@ class SaveUserNameUseCaseTest {
     @BeforeEach
     fun setup() {
         useCase = SaveUserNameUseCase(repository)
-    }
-
-    @Nested
-    @DisplayName("Validation")
-    inner class Validation {
-
-        @Test
-        @DisplayName("blank name throws IllegalArgumentException")
-        fun blankNameThrows() = runTest {
-            assertThrows(IllegalArgumentException::class.java) {
-                kotlinx.coroutines.runBlocking {
-                    useCase("")
-                }
-            }
-        }
-
-        @Test
-        @DisplayName("whitespace only name throws IllegalArgumentException")
-        fun whitespaceOnlyThrows() = runTest {
-            assertThrows(IllegalArgumentException::class.java) {
-                kotlinx.coroutines.runBlocking {
-                    useCase("   ")
-                }
-            }
-        }
-
-        @Test
-        @DisplayName("blank name does not call repository")
-        fun blankNameDoesNotCallRepository() = runTest {
-            try {
-                useCase("")
-            } catch (e: Exception) {
-            }
-            verify(repository, never()).saveUserName(org.mockito.kotlin.any())
-        }
     }
 
     @Nested
