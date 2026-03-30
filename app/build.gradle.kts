@@ -46,7 +46,10 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true  // needed to expose GEMINI_API_KEY via BuildConfig
+        buildConfig = true
+    }
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 }
 
@@ -77,12 +80,6 @@ dependencies {
     // --- ViewModel ---
     implementation(libs.lifecycle.viewmodel.compose)
 
-    // --- CameraX (receipt scanning) ---
-    implementation(libs.camerax.core)
-    implementation(libs.camerax.camera2)
-    implementation(libs.camerax.lifecycle)
-    implementation(libs.camerax.view)
-
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.okhttp.logging)
@@ -94,8 +91,17 @@ dependencies {
 
     implementation(libs.timber)
 
-    // --- Test ---
+    implementation(libs.mockito)
+    implementation(libs.coroutine.test)
+    implementation(libs.core.testing)
+    implementation(libs.turbine)
+
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
