@@ -21,6 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +40,8 @@ fun AddExpenseFab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val fabDescription = stringResource(R.string.add_expense)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -46,11 +51,16 @@ fun AddExpenseFab(
                     colors = listOf(AmberPrimary, AmberGradientEnd)
                 )
             )
+            .defaultMinSize(minHeight = 48.dp)
+            .semantics {
+                contentDescription = fabDescription
+                role = Role.Button
+            }
             .clickable(
                 role = Role.Button,
-                onClickLabel = stringResource(R.string.add_expense)
-            ) { onClick() }
-            .defaultMinSize(minHeight = 48.dp)
+                onClickLabel = fabDescription,
+                onClick = onClick
+            )
             .padding(PaddingLarge),
         contentAlignment = Alignment.Center
     ) {

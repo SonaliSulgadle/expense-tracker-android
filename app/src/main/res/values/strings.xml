@@ -60,4 +60,13 @@
     <string name="onboarding_name_placeholder">e.g. Sonali</string>
     <string name="onboarding_continue">Get started</string>
     <string name="onboarding_saving">Saving…</string>
+
+    <!-- Accessibility content descriptions -->
+    <string name="cd_profile_button">Profile — %s</string>
+    <string name="cd_view_category">View %s expenses</string>
+    <string name="cd_spending_chart">Spending by category chart</string>
+    <string name="cd_delete_expense">Delete expense</string>
+    <string name="cd_filter_by">Filter by %s</string>
+    <string name="cd_clear_filter">Clear %s filter</string>
+    <string name="cd_ai_categorized">AI categorized</string>
 </resources>

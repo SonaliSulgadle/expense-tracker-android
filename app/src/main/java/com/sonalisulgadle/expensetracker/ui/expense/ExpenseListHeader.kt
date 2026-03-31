@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens
@@ -33,6 +35,7 @@ fun ExpenseListHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
     ) {
+        val backDescription = stringResource(R.string.back)
         OutlinedIconButton(
             onClick = onBackClick,
             shape = RoundedCornerShape(Dimens.RadiusMedium),
@@ -40,11 +43,15 @@ fun ExpenseListHeader(
                 Dimens.CardBorderWidth,
                 MaterialTheme.colorScheme.outline
             ),
-            modifier = Modifier.size(38.dp)
+            modifier = Modifier
+                .size(38.dp)
+                .semantics {
+                    contentDescription = backDescription
+                }
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.back),
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(Dimens.IconSmall)
             )
