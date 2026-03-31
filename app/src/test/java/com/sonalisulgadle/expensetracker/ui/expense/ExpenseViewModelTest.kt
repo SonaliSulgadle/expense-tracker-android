@@ -1,5 +1,6 @@
 package com.sonalisulgadle.expensetracker.ui.expense
 
+import app.cash.turbine.TurbineTestContext
 import app.cash.turbine.test
 import com.sonalisulgadle.expensetracker.InstantTaskExecutorExtension
 import com.sonalisulgadle.expensetracker.data.local.CategoryTotal
@@ -67,6 +68,14 @@ class ExpenseViewModelTest {
         total = 8500.0
     )
 
+    private suspend fun TurbineTestContext<ExpenseListUiState>.awaitLoadedState(): ExpenseListUiState {
+        var state = awaitItem()
+        while (state.isLoading) {
+            state = awaitItem()
+        }
+        return state
+    }
+
     @BeforeEach
     fun setup() {
         Dispatchers.setMain(testDispatcher)
@@ -106,41 +115,43 @@ class ExpenseViewModelTest {
     @DisplayName("Username in list state")
     inner class UsernameInListState {
 
-//        @Test
-//        @DisplayName("expenseListState contains username from use case")
-//        fun containsUsername() = runTest {
-//            testDispatcher.scheduler.advanceUntilIdle()
-//            viewModel.expenseListState.test {
-//                val state = awaitItem()
-//                assertEquals("Sonali", state.userName)
-//                cancelAndIgnoreRemainingEvents()
-//            }
-//        }
-//
-//        @Test
-//        @DisplayName("expenseListState contains correct user initial")
-//        fun containsCorrectInitial() = runTest {
-//            testDispatcher.scheduler.advanceUntilIdle()
-//            viewModel.expenseListState.test {
-//                val state = awaitItem()
-//                assertEquals("S", state.userInitial)
-//                cancelAndIgnoreRemainingEvents()
-//            }
-//        }
+        @Test
+        @DisplayName("contains username from use case")
+        fun containsUsername() = runTest {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            viewModel.expenseListState.test {
+                val state = awaitLoadedState()
+                assertEquals("Sonali", state.userName)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        @DisplayName("contains correct user initial")
+        fun containsCorrectInitial() = runTest {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            viewModel.expenseListState.test {
+                val state = awaitLoadedState()
+                assertEquals("S", state.userInitial)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 
         @Test
         @DisplayName("empty username produces empty initial")
         fun emptyUsernameProducesEmptyInitial() = runTest {
             whenever(getUserNameUseCase()).thenReturn(flowOf(""))
-            viewModel = ExpenseViewModel(
+            val emptyViewModel = ExpenseViewModel(
                 addExpenseUseCase, getExpensesUseCase,
                 deleteExpenseUseCase, getCategoryTotalsUseCase,
                 restoreExpenseUseCase, getUserNameUseCase
             )
             testDispatcher.scheduler.advanceUntilIdle()
 
-            viewModel.expenseListState.test {
-                val state = awaitItem()
+            emptyViewModel.expenseListState.test {
+                val state = awaitLoadedState()
                 assertEquals("", state.userInitial)
                 cancelAndIgnoreRemainingEvents()
             }
@@ -211,38 +222,42 @@ class ExpenseViewModelTest {
     @DisplayName("Expense list state")
     inner class ExpenseListState {
 
-//        @Test
-//        @DisplayName("contains expenses from use case")
-//        fun containsExpenses() = runTest {
-//            testDispatcher.scheduler.advanceUntilIdle()
-//            viewModel.expenseListState.test {
-//                val state = awaitItem()
-//                assertEquals(1, state.expenses.size)
-//                assertEquals("burger", state.expenses[0].description)
-//                cancelAndIgnoreRemainingEvents()
-//            }
-//        }
-//
-//        @Test
-//        @DisplayName("computes correct total spent")
-//        fun computesCorrectTotal() = runTest {
-//            testDispatcher.scheduler.advanceUntilIdle()
-//            viewModel.expenseListState.test {
-//                assertEquals(8500.0, awaitItem().totalSpent, 0.01)
-//                cancelAndIgnoreRemainingEvents()
-//            }
-//        }
-//
-//        @Test
-//        @DisplayName("groups expenses by month")
-//        fun groupsExpensesByMonth() = runTest {
-//            testDispatcher.scheduler.advanceUntilIdle()
-//            viewModel.expenseListState.test {
-//                val state = awaitItem()
-//                assertTrue(state.groupedExpenses.isNotEmpty())
-//                cancelAndIgnoreRemainingEvents()
-//            }
-//        }
+        @Test
+        @DisplayName("contains expenses from use case")
+        fun containsExpenses() = runTest {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            viewModel.expenseListState.test {
+                val state = awaitLoadedState()
+                assertEquals(1, state.expenses.size)
+                assertEquals("burger", state.expenses[0].description)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        @DisplayName("computes correct total spent")
+        fun computesCorrectTotal() = runTest {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            viewModel.expenseListState.test {
+                val state = awaitLoadedState()
+                assertEquals(8500.0, state.totalSpent, 0.01)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        @DisplayName("groups expenses by month")
+        fun groupsExpensesByMonth() = runTest {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            viewModel.expenseListState.test {
+                val state = awaitLoadedState()
+                assertTrue(state.groupedExpenses.isNotEmpty())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
     }
 
     @Nested

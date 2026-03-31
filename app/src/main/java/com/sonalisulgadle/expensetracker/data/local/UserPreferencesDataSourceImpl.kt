@@ -16,15 +16,16 @@ private val Context.dataStore: DataStore<Preferences>
         by preferencesDataStore(name = "user_preferences")
 
 @Singleton
-class UserPreferencesDataStore @Inject constructor(
+class UserPreferencesDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+) : UserPreferencesDataSource {
+
     private val userNameKey = stringPreferencesKey("user_name")
 
-    val userName: Flow<String> = context.dataStore.data
+    override val userName: Flow<String> = context.dataStore.data
         .map { prefs -> prefs[userNameKey].orEmpty() }
 
-    suspend fun saveUserName(name: String) {
+    override suspend fun saveUserName(name: String) {
         context.dataStore.edit { prefs ->
             prefs[userNameKey] = name.trim()
         }

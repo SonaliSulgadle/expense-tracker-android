@@ -22,10 +22,14 @@ class GetExpensesUseCaseTest {
     private lateinit var useCase: GetExpensesUseCase
 
     private val fakeExpenses = listOf(
-        Expense(1L, "burger", 8500.0, "Food & Drink",
-            "🍔", System.currentTimeMillis(), true),
-        Expense(2L, "uber", 15000.0, "Transport",
-            "🚕", System.currentTimeMillis(), true)
+        Expense(
+            1L, "burger", 8500.0, "Food & Drink",
+            "🍔", System.currentTimeMillis(), true
+        ),
+        Expense(
+            2L, "uber", 15000.0, "Transport",
+            "🚕", System.currentTimeMillis(), true
+        )
     )
 
     @BeforeEach
@@ -68,7 +72,11 @@ class GetExpensesUseCaseTest {
             whenever(repository.getAllExpenses())
                 .thenReturn(flowOf(emptyList()))
 
-            useCase()
+            useCase().test {
+                awaitItem()
+                cancelAndIgnoreRemainingEvents()
+            }
+
             verify(repository).getAllExpenses()
         }
     }
