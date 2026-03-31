@@ -67,7 +67,11 @@ class GetCategoryTotalsUseCaseTest {
             whenever(repository.getCategoryTotals())
                 .thenReturn(flowOf(emptyList()))
 
-            useCase()
+            useCase().test {
+                awaitItem()
+                cancelAndIgnoreRemainingEvents()
+            }
+
             verify(repository).getCategoryTotals()
         }
     }

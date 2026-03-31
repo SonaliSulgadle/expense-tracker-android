@@ -81,7 +81,7 @@ class FormatUtilsTest {
 
         @Test
         fun showsKForThousands() {
-            assertEquals("125k", FormatUtils.formatCompactAmount(124500.0))
+            assertEquals("124k", FormatUtils.formatCompactAmount(124500.0))
         }
 
         @Test

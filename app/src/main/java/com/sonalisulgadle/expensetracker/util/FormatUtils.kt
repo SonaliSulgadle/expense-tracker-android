@@ -20,8 +20,16 @@ object FormatUtils {
 
     fun formatCompactAmount(amount: Double): String {
         return when {
-            amount >= 1_000_000 -> "${(amount / 1_000_000).toBigDecimal().setScale(1, RoundingMode.HALF_UP)}M"
-            amount >= 1_000 -> "${(amount / 1_000).toBigDecimal().setScale(0, RoundingMode.HALF_UP)}k"
+            amount >= 1_000_000 -> "${
+                (amount / 1_000_000).toBigDecimal()
+                    .setScale(1, RoundingMode.DOWN)
+            }M"
+
+            amount >= 1_000 -> "${
+                (amount / 1_000).toBigDecimal()
+                    .setScale(0, RoundingMode.DOWN)
+            }k"
+
             else -> formatAmount(amount)
         }
     }
