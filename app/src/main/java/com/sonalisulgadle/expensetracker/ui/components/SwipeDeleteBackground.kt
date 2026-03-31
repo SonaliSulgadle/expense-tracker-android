@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.theme.Dimens
 
@@ -31,6 +33,7 @@ fun DeleteBackground(
 ) {
     val isActive = targetValue == SwipeToDismissBoxValue.EndToStart
 
+    val deleteExpenseDescription = stringResource(R.string.delete_expense)
     val backgroundColor by animateColorAsState(
         targetValue = if (isActive) MaterialTheme.colorScheme.error
         else MaterialTheme.colorScheme.error.copy(alpha = 0.12f),
@@ -42,7 +45,10 @@ fun DeleteBackground(
         modifier = Modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(Dimens.RadiusLarge))
-            .background(backgroundColor),
+            .background(backgroundColor)
+            .semantics {
+                contentDescription = deleteExpenseDescription
+            },
         contentAlignment = Alignment.CenterEnd
     ) {
         Icon(

@@ -17,6 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.ui.expense.ExpenseListUiState
@@ -33,6 +37,9 @@ fun DashboardHeader(
     uiState: ExpenseListUiState,
     onAvatarClick: () -> Unit = {},
 ) {
+    val avatarDescription = stringResource(
+        R.string.cd_profile_button, userInitial
+    )
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -63,7 +70,11 @@ fun DashboardHeader(
                         colors = listOf(AmberPrimary, AmberGradientEnd)
                     )
                 )
-                .clickable { onAvatarClick() },
+                .semantics {
+                    contentDescription = avatarDescription
+                    role = Role.Button
+                }
+                .clickable(onClick = onAvatarClick),
             contentAlignment = Alignment.Center
         ) {
             Text(

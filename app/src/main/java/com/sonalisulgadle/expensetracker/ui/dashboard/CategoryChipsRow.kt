@@ -19,6 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.data.local.CategoryTotal
@@ -77,8 +80,18 @@ private fun CategoryChip(
                 if (isSelected) AmberDim
                 else MaterialTheme.colorScheme.surface
             )
-            .clickable { onClick() }
+            .clickable(
+                onClickLabel = if (isSelected)
+                    "Clear $label filter"
+                else
+                    "Filter by $label",
+                role = Role.Button,
+                onClick = onClick
+            )
             .padding(horizontal = 14.dp, vertical = 7.dp)
+            .semantics {
+                selected = isSelected
+            }
     ) {
         Text(
             text = label,

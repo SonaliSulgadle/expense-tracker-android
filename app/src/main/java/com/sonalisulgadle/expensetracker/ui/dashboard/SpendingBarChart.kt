@@ -27,6 +27,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -73,7 +75,16 @@ fun SpendingBarChart(
         else -> BAR_MIN_WIDTH_DP
     }
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics {
+                contentDescription = buildString {
+                    append("Spending by category chart. ")
+                    categoryTotals.forEach { total ->
+                        append("${total.category}: ₩${FormatUtils.formatAmount(total.total)}. ")
+                    }
+                }
+            },
         shape = RoundedCornerShape(Dimens.RadiusCard),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

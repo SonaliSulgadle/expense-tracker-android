@@ -22,11 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sonalisulgadle.expensetracker.R
 import com.sonalisulgadle.expensetracker.domain.model.Expense
 import com.sonalisulgadle.expensetracker.ui.components.AiBadge
 import com.sonalisulgadle.expensetracker.ui.theme.AmberPrimary
@@ -45,10 +49,31 @@ fun ExpenseItem(
     onClick: () -> Unit,
     trailingContent: @Composable (() -> Unit)? = null
 ) {
+    val itemDescription = buildString {
+        append(expense.description)
+        append(", ")
+        append(expense.category)
+        append(", ₩")
+        append(FormatUtils.formatAmount(expense.amount))
+        if (expense.isAiCategorized) {
+            append(", ")
+            append("AI categorized")
+        }
+    }
+    val clickLabel = stringResource(
+        R.string.cd_view_category,
+        expense.category
+    )
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .semantics {
+                contentDescription = itemDescription
+            }
+            .clickable(
+                onClickLabel = clickLabel,
+                onClick = onClick
+            ),
         shape = RoundedCornerShape(RadiusLarge),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
