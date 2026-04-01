@@ -181,18 +181,31 @@ app/src/main/
 ## Testing
 ```
 Unit tests:
-├── EmojiResolverTest              — keyword matching, word boundaries
-├── CategoryPromptBuilderTest      — prompt content, categories, format
-├── FormatUtilsTest                — amount, percentage, compact formatting
-├── DateUtilsTest                  — month formatting, days calculation
-├── AddExpenseUseCaseTest          — validation, AI integration, errors
-├── GetExpensesByCategoryUseCaseTest — filtering, empty state
-├── GetUserNameUseCaseTest         — name retrieval, flow updates
-├── SaveUserNameUseCaseTest        — validation, trimming, repository call
-├── ExpenseViewModelTest           — state transitions, username, delete
-├── OnboardingViewModelTest        — onboarding state, save behavior
-└── CategoryViewModelTest          — stats, top items, percentages
-
+├── ai/
+│   ├── EmojiResolverTest              — keyword matching, word boundaries, substring safety
+│   └── CategoryPromptBuilderTest      — prompt content, categories, JSON format
+├── util/
+│   ├── FormatUtilsTest                — amount, percentage, compact formatting
+│   └── DateUtilsTest                  — month formatting, days calculation
+├── domain/usecase/
+│   ├── AddExpenseUseCaseTest          — validation, AI integration, error handling
+│   ├── DeleteExpenseUseCaseTest       — repository delegation
+│   ├── RestoreExpenseUseCaseTest      — restore with original category and AI flag
+│   ├── GetExpensesUseCaseTest         — retrieval, empty state, delegation
+│   ├── GetExpensesByCategoryUseCaseTest — category filtering, case sensitivity
+│   ├── GetCategoryTotalsUseCaseTest   — totals retrieval, delegation
+│   ├── GetUserNameUseCaseTest         — name retrieval, flow updates
+│   └── SaveUserNameUseCaseTest        — validation, trimming, repository call
+├── data/
+│   ├── local/
+│   │   └── ExpenseMapperTest          — entity↔domain mapping, round-trip
+│   └── repository/
+│       ├── ExpenseRepositoryImplTest  — DAO delegation, mapping, category totals
+│       └── UserPreferencesRepositoryImplTest — DataStore delegation, flow updates
+└── ui/
+    ├── ExpenseViewModelTest           — state transitions, username, delete, undo
+    ├── OnboardingViewModelTest        — onboarding state, save behavior
+    └── CategoryViewModelTest          — stats calculation, top items, percentages
 ```
 
 Run all tests:
